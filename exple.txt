@@ -1,0 +1,73 @@
+--------------------------------------------client
+import java.rmi.*;
+
+public class Client {
+
+static int resultat;
+
+public static void main(String[] args) {
+
+try {
+
+Tache reference = (Tache)Naming.lookup("rmi://localhost/Serveur");
+
+//resultat = reference.addition(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+
+resultat = reference.addition(2, 2);
+
+System.out.println("La somme est: " + resultat); }
+
+catch(Exception e) { System.err.println("Erreur: " + e.getMessage()); }
+
+} }
+
+-----------------------------------Serveur
+import java.rmi.*;
+
+import java.rmi.server.*;
+
+import java.rmi.registry.*;
+
+public class Serveur extends UnicastRemoteObject implements Tache {
+
+public Serveur() throws RemoteException {
+
+super(); }
+public int addition(int a, int b) throws RemoteException {
+
+return a + b; }
+
+public static void main(String[] args) {
+
+try {
+
+Serveur objet = new Serveur();
+
+Naming.rebind("rmi://localhost/Serveur", objet);
+
+System.out.println("Serveur prêt");
+
+}
+
+catch(Exception e) {
+
+System.err.println("Erreur: " + e.getMessage());
+
+}
+
+}
+
+}
+
+---------------------------------------------Interface
+import java.rmi.Remote;
+
+import java.rmi.RemoteException;
+
+public interface Tache extends Remote {
+
+public int addition(int a, int b) throws RemoteException;
+
+}
+
+
